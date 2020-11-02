@@ -106,6 +106,7 @@ const checkPassword = () => {
 const checkConfirmPassword = () => {
     const confirmPassword = confirmPasswordEl.value.trim();
     let valid = false;
+    const password = passwordEl.value.trim();
 
     if (!isRequired(confirmPassword)) {
         showError(confirmPasswordEl, 'Confirm Password cannot be blank')
@@ -118,8 +119,7 @@ const checkConfirmPassword = () => {
     return valid;
 }
 
-
-function sendForm(e) {
+form.addEventListener('submit', function (e) {
     e.preventDefault();
 
     // Validate forms
@@ -138,11 +138,24 @@ function sendForm(e) {
 
     if (isFormValid) {
     }
+});
+
+// Debounce function
+const debounce = (fn, delay = 500) => {
+    let timeoutID;
+    return (...args) => {
+        // cancel previous timer
+        if (timeoutID) {
+            clearTimeout(timeoutID);
+        }
+    // setup a new timer
+    timeoutID = setTimeout(() => {
+        fn.apply(null, args)
+        }, delay);
+    }
 }
 
-form.addEventListener('submit', sendForm);
-
-form.addEventListener('input', function (e) {
+form.addEventListener('input', debounce(function (e) {
     switch (e.target.id) {
         case 'username':
             checkUsername();
@@ -157,4 +170,4 @@ form.addEventListener('input', function (e) {
             checkConfirmPassword();
             break;
     }
-}) 
+}));
